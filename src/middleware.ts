@@ -1,30 +1,29 @@
-import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken"; // Importing the jsonwebtoken library for token verification.
+
 
 export interface AuthRequest extends Request {
     userId?: string;
 }
 
+// Middleware to validate user authentication using a JWT token.
 export const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization;
+    // Extract the "authorization" header from the request.
+    const header = req.headers["authorization"];
 
-    if (authHeader) {
-        const token = authHeader.split(" ")[1];
+    if (!header) {
+        res.status(403).json({ message: "Unauthorized: No token provided" });
+        return;
+    }
 
-        if (!token) {
-            return res.status(401).json({ message: "Token missing" });
-        }
+    try {
+        // Verify the JWT token using the secret key.
+        const decoded = jwt.verify(header, process.env.JWT_SECRET as string) as { userId: string };
 
-        jwt.verify(token, process.env.JWT_SECRET as string, (err, user) => {
-            if (err) {
-                return res.status(403).json({ message: "Invalid token" });
-            }
-
-            // @ts-ignore
-            req.userId = (user as any).userId;
-            next();
-        });
-    } else {
-        res.status(401).json({ message: "Authorization header missing" });
+        req.userId = decoded.userId; // Store the decoded user ID for later use in request handling.
+        next(); // Call the next middleware or route handler.
+    } catch (e) {
+        // If the token is invalid, send a 403 Unauthorized response.
+        res.status(403).json({ message: "Unauthorized: Invalid token" });
     }
 };

@@ -2,16 +2,18 @@ import express from "express";
 import dotenv from "dotenv";
 import { connectDb } from "./connectDb";
 import authRoutes from "./routes/auth.routes";
+import contentRoutes from "./routes/content.routes";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 app.use(express.json());
 
 // Routes
 app.use("/auth", authRoutes);
+app.use("/api", contentRoutes);
 
 // Start server
 const startServer = async () => {
