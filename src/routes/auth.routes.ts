@@ -1,13 +1,9 @@
 import { Router } from "express";
-// const {Router} = require("express");
-import { signupLogic } from "../controllers/auth.controller";
+import { signupLogic, signinLogic } from "../controllers/auth.controller";
 
 const router = Router();
 
 router.post("/signup", signupLogic);
-
-
-// router.post("/siginin", );
-
+router.post("/signin", signinLogic);
 
 export default router;
