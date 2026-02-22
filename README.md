@@ -36,3 +36,13 @@ Second Brain solves this problem by allowing users to:
 ## 🎯 Goal
 
 To build a simple, fast, and secure system that acts as your digital memory — so you never lose valuable resources again.
+
+## user schema/data
+![user schema](image.png)
+
+## content schema/data
+![content schema](image-1.png)
+
+
+
+
